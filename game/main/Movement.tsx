@@ -1,4 +1,4 @@
-import { ComponentModel } from "@/models/gameobject/ComponentModel";
+import { ComponentModel } from "@/engine/core/models/gameobject/ComponentModel";
 
 // Component làm GameObject di chuyển
 export class MoveComponent extends ComponentModel {

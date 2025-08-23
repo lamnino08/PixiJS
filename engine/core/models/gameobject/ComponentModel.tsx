@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { GameObjectModel } from "@/models/gameobject/GameObjectModel";
+import { GameObjectModel } from "@/engine/core/models/gameobject/GameObjectModel";
 
 export abstract class ComponentModel {
   gameObject!: GameObjectModel;

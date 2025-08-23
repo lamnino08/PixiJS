@@ -1,16 +1,15 @@
 'use client'
 
 import { Stage } from "@pixi/react";
-import { SceneView } from "./base/scene/Scene";
-import { GameObjectModel } from "@/models/gameobject/GameObjectModel";
-import { SceneModel } from "@/models/scene/Scene";
-import { SpriteComponentModel } from "@/models/gameobject/SpriteComponentModel";
-import { MoveComponent } from "./main/Movement";
-import { TextComponentModel } from "@/models/gameobject/Text";
+import { SceneView } from "@/engine/core/scene/Scene";
+import { GameObjectModel } from "@/engine/core/models/gameobject/GameObjectModel";
+import { SceneModel } from "@/engine/core/models/scene/Scene";
+import { SpriteComponentModel } from "@/engine/core/models/gameobject/SpriteComponentModel";
+import { MoveComponent } from "@/game/main/Movement";
+import { TextComponentModel } from "@/engine/core/models/gameobject/Text";
 import * as PIXI from "pixi.js";
-import { ButtonComponentModel } from "./base/component/Button";
-import { HoverFeedbackComponent } from "./main/HoverFeedback";
-import "@/lib/tween/GameObjectTween";
+import { ButtonComponentModel } from "@/engine/core/component/ButtonComponent";
+import { HoverFeedbackComponent } from "@/game/main/HoverFeedback";
 
 
 export default function PixiApp() {

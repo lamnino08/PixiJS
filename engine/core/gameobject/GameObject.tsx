@@ -1,5 +1,5 @@
 import { useTick, Container } from "@pixi/react";
-import { GameObjectModel } from "@/models/gameobject/GameObjectModel";
+import { GameObjectModel } from "@/engine/core/models/gameobject/GameObjectModel";
 import React from "react";
 import * as PIXI from "pixi.js";
 

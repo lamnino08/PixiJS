@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 
-const PixiApp = dynamic(() => import("../compnents/PixiApp"), {
+const PixiApp = dynamic(() => import("@/game/PixiApp"), {
   ssr: false,
 });
 

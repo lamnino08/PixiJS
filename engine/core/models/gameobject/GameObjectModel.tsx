@@ -1,4 +1,4 @@
-import { ComponentModel } from "@/models/gameobject/ComponentModel";
+import { ComponentModel } from "@/engine/core/models/gameobject/ComponentModel";
 import * as PIXI from "pixi.js";
 import { Event } from "@/lib/Emiter";
 
