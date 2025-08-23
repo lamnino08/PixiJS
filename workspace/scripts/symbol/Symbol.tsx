@@ -2,6 +2,7 @@ import { ComponentModel } from "@/engine/core/models/gameobject/ComponentModel";
 import { GameObjectModel } from "@/engine/core/models/gameobject/GameObjectModel";
 import { SpriteComponentModel } from "@/engine/core/models/gameobject/SpriteComponentModel";
 import { SymbolConfig } from "@/workspace/config/GameConfig";
+import { Point } from "pixi.js";
 
 export type SymbolType = '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'K';
 
@@ -16,13 +17,13 @@ export const getSymbolBlurTextureUrl = (symbol: SymbolType): string => {
 export const symbol = (texture: SymbolType) => {
     const symbol = new Symbol(texture)
 
-    new GameObjectModel({
+    const gameObject = new GameObjectModel({
         width: SymbolConfig.width,
         height: SymbolConfig.height,
         components: [symbol]
     })
 
-    return symbol;
+    return gameObject;
 }
 
 export class Symbol extends ComponentModel{
