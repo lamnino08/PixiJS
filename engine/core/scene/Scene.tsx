@@ -1,8 +1,8 @@
 import { useTick, Container } from "@pixi/react";
 import React from "react";
-import { GameObjectModel } from "@/models/gameobject/GameObjectModel";
-import { GameObject } from "@/compnents/base/gameobject/GameObject";
-import { SceneModel } from "@/models/scene/Scene";
+import { GameObjectModel } from "@/engine/core/models/gameobject/GameObjectModel";
+import { GameObject } from "@/engine/core/gameobject/GameObject";
+import { SceneModel } from "@/engine/core/models/scene/Scene";
 
 interface SceneViewProps {
     scene: { gameObjects: GameObjectModel[]; update: (delta: number) => void };

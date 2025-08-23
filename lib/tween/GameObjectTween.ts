@@ -1,9 +1,14 @@
-import { GameObjectModel } from "@/models/gameobject/GameObjectModel";
-import { tween } from "@/lib/tween/Tween";
+import { GameObjectModel } from "@/engine/core/models/gameobject/GameObjectModel";
+import { Tween } from "@/lib/tween/Tween";
+import { Easing } from "@/lib/tween/Easing";
 
-declare module "@/models/gameobject/GameObject" {
+declare module "@/engine/core/models/gameobject/GameObjectModel" {
   interface GameObjectModel {
-    doScale(to: number, duration: number, onComplete?: () => void): void;
+    doScale(
+      to: number,
+      duration: number,
+      onComplete?: () => void
+    ): Tween;
   }
 }
 
@@ -14,7 +19,11 @@ GameObjectModel.prototype.doScale = function (
   onComplete?: () => void
 ) {
   const from = this.scale;
-  tween(from, to, duration, (val) => {
+
+  return new Tween(from, to, duration, (val) => {
     this.scale = val;
-  }, onComplete);
+  })
+    .setEasing(Easing.easeOutBounce) // hoặc Easing khác tùy bạn
+    .onDone(() => onComplete?.())
+    .start();
 };

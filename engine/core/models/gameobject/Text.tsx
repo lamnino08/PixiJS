@@ -1,4 +1,4 @@
-import { ComponentModel } from "@/models/gameobject/ComponentModel";
+import { ComponentModel } from "@/engine/core/models/gameobject/ComponentModel";
 import { Text } from "@pixi/react";
 import { ReactNode } from "react";
 import * as PIXI from "pixi.js";

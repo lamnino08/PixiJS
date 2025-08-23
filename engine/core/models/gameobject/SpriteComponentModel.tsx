@@ -1,4 +1,4 @@
-import { ComponentModel } from "@/models/gameobject/ComponentModel";
+import { ComponentModel } from "@/engine/core/models/gameobject/ComponentModel";
 import { Graphics, Sprite } from "@pixi/react";
 import { ReactNode } from "react";
 
@@ -17,7 +17,19 @@ export class SpriteComponentModel extends ComponentModel {
         this.anchor = data.anchor ?? 0.5;
     }
 
+
+
     render(): ReactNode {
+        const commonProps = {
+            interactive: true,
+            pointerover: () => this.gameObject.onHoverEnter.invoke(),
+            pointerout: () => this.gameObject.onHoverExit.invoke(),
+            pointerdown: () => this.gameObject.onPointerDown.invoke(),
+            pointerup: () => this.gameObject.onPointerUp.invoke(),
+            pointerupoutside: () => this.gameObject.onPointerUpOutside.invoke(),
+            pointertap: () => this.gameObject.onPointerTap.invoke(),
+        };
+
         if (this.texture) {
             return (
                 <Sprite
@@ -25,26 +37,22 @@ export class SpriteComponentModel extends ComponentModel {
                     width={this.gameObject.width}
                     height={this.gameObject.height}
                     anchor={this.anchor}
-                    interactive={true}
-                    pointerover={() => { this.gameObject.onHoverEnter.invoke(); console.log("ok"); }}
-                    pointerout={() => this.gameObject.onHoverExit.invoke()}
                     scale={this.gameObject.scale}
+                    {...commonProps}
                 />
             );
         }
-    
+
         return (
             <Graphics
-                interactive={true}
-                pointerover={() => this.gameObject.onHoverEnter.invoke()}
-                pointerout={() => this.gameObject.onHoverExit.invoke()}
                 draw={(g) => {
                     g.clear();
                     g.beginFill(0xffffff);
                     g.drawRect(0, 0, this.gameObject.width, this.gameObject.height);
                     g.endFill();
                 }}
+                {...commonProps}
             />
         );
-    }     
+    }
 }

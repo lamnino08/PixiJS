@@ -1,4 +1,5 @@
-import { ComponentModel } from "@/models/gameobject/ComponentModel";
+import { ComponentModel } from "@/engine/core/models/gameobject/ComponentModel";
+import "@/lib/tween/GameObjectTween";
 
 export interface HoverFeedbackProps {
     scaleNormal?: number;
@@ -14,7 +15,7 @@ export class HoverFeedbackComponent extends ComponentModel {
         this.props = {
             scaleNormal: props?.scaleNormal ?? 1,
             scaleHover: props?.scaleHover ?? 1.02,
-            duration: props?.duration ?? 200,
+            duration: props?.duration ?? 400,
         };
 
         this.onHoverEnter = () => {
