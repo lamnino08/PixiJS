@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎮 Candy Slot Match 4 - Prototype (PixiJS + Next.js)
 
-## Getting Started
+Bài test thực hiện bởi **Phan Đức Lâm**  
 
-First, run the development server:
+## 📌 Giới thiệu
+Đây là bản prototype đơn giản cho chức năng **spin và trả kết quả** của game **Candy Match 4** được xây dựng trên **PixiJS (v7)** kết hợp với **Next.js**.  
+Prototype này tập trung vào việc thể hiện **board**, **reel**, **symbol**, cơ chế **spin – stop – check cluster thắng – rơi lấp chỗ trống**.
+
+---
+
+## 🕹️ Gameplay
+
+- **Board**: ma trận 5 reel (cột), mỗi reel chứa nhiều symbol kẹo.  
+- **Reel**: guồng quay theo chiều dọc.  
+- **Symbol**: 1 viên kẹo. Có nhiều loại kẹo, kẹo ngũ sắc là wild (có thể thay thế cho bất kỳ loại nào) nhưng không tự tạo cụm thắng.
+
+**Luật thắng:**
+- Khi có từ **4 symbol cùng loại trở lên kề nhau** tạo thành 1 cụm → thưởng điểm.  
+- Nếu có **nhiều cụm cùng lúc**, người chơi nhận thưởng từ tất cả.  
+- Sau khi ăn cụm, symbol biến mất → tạo khoảng trống → symbol mới rơi xuống lấp chỗ trống. Nếu tiếp tục có cụm mới thì tiếp tục ăn.
+
+---
+
+## ⚙️ Chức năng chính
+
+1. **Spin**  
+   - Khi bấm `StartSpin`, các reel quay từ trái qua phải (delay giữa các reel = `0.3s`).  
+   - Tối thiểu quay trong `2s`.  
+   - Game gửi request đến server (giả lập qua `requestSpinData()`).  
+
+2. **Stop & Hiển thị kết quả**  
+   - Khi server trả về kết quả (hoặc sau 2s) → reel dừng lại theo thứ tự từ trái sang phải.  
+   - Symbol hiển thị theo matrix data từ server.  
+
+3. **Ăn cụm thắng (cluster)**  
+   - Nếu xuất hiện cụm ≥ 4 symbol kề nhau → cụm thắng được highlight, biến mất.  
+   - Symbol phía trên rơi xuống (có animation rơi tự do).  
+   - Gửi request mới lấy thêm symbol để lấp đầy chỗ trống.  
+   - Quá trình lặp lại cho đến khi không còn cụm thắng.
+
+4. **Button StartSpin**  
+   - Khi đang spin thì bị disable + mờ đi.  
+   - Khi dừng xong toàn bộ → bật lại.  
+
+---
+
+## 🛠️ Công nghệ
+
+- [PixiJS v7](https://pixijs.com/) – render game board, reel, symbol, animation.  
+- [Next.js 15](https://nextjs.org/) – framework React để chạy FE.  
+- TypeScript – viết code rõ ràng, dễ maintain.  
+- Pattern hướng đối tượng: `Game -> Board -> Reel -> Symbol` giúp mở rộng dễ dàng.
+
+---
+
+## 🚀 Cài đặt & Chạy
 
 ```bash
+# Cài dependencies
+npm install
+
+# Chạy development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Mở trình duyệt
+http://localhost:3000
