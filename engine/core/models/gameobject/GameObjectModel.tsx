@@ -15,7 +15,7 @@ export interface GameObjectConstructorProps {
   visible?: boolean;
   interactive?: boolean;
   components?: ComponentModel[];
-  children?: GameObjectModel[];
+  childrens?: GameObjectModel[];
 }
 
 export class GameObjectModel {
@@ -29,7 +29,6 @@ export class GameObjectModel {
   alpha: number;
   visible: boolean;
   interactive: boolean;
-
   components: Record<string, ComponentModel> = {};
   children: GameObjectModel[] = [];
   parent?: GameObjectModel;
@@ -57,7 +56,7 @@ export class GameObjectModel {
 
     data.components?.forEach((c) => this.addComponentInConstructor(c));
     Object.values(this.components).forEach((c) => c.start?.());
-    data.children?.forEach((child) => this.addChild(child));
+    data.childrens?.forEach((child) => this.addChild(child));
   }
 
   private addComponentInConstructor<T extends ComponentModel>(component: T): T {
@@ -74,7 +73,7 @@ export class GameObjectModel {
 
   getOrAddComponent<T extends ComponentModel>(
     ctor: new (...args: any[]) => T,
-    createFn: () => T
+    factory?: () => T
   ): T {
     const key = ctor.name;
 
@@ -82,11 +81,7 @@ export class GameObjectModel {
       return this.components[key] as T;
     }
 
-    if (!createFn) {
-      throw new Error(`Component ${key} does not exist and no creation function provided.`);
-    }
-
-    const component = new ctor();
+    const component = factory ? factory() : new ctor();
     this.addComponent(component);
     return component;
   }

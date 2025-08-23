@@ -20,7 +20,6 @@ export class ButtonComponentModel extends ComponentModel {
     // tạo sprite nếu chưa có
     this.sprite = this.gameObject.getOrAddComponent(
       SpriteComponentModel,
-      () => new SpriteComponentModel({})
     );
   }
 
