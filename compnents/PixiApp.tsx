@@ -1,31 +1,65 @@
-"use client"
-import React, { useState } from "react";
-import { Stage, Container, Sprite, useTick } from "@pixi/react";
-// import { Application } from "pixi.js";
+'use client'
 
-const RotatingBunny = () => {
-  const [rotation, setRotation] = useState(0);
+import { Stage } from "@pixi/react";
+import { SceneView } from "./base/scene/Scene";
+import { GameObjectModel } from "@/models/gameobject/GameObjectModel";
+import { SceneModel } from "@/models/scene/Scene";
+import { SpriteComponentModel } from "@/models/gameobject/SpriteComponentModel";
+import { MoveComponent } from "./main/Movement";
+import { TextComponentModel } from "@/models/gameobject/Text";
+import * as PIXI from "pixi.js";
+import { ButtonComponentModel } from "./base/component/Button";
+import { HoverFeedbackComponent } from "./main/HoverFeedback";
+import "@/lib/tween/GameObjectTween";
 
-  useTick((delta) => delta && setRotation(rotation + 0.05 * delta));
+
+export default function PixiApp() {
+  const bunnySprite = new SpriteComponentModel({
+    texture: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/693612/IaUrttj.png",
+  });
+
+  const movement = new MoveComponent(1, 1);
+
+  const textComponent = new TextComponentModel({
+    text: "I'm child of Bunny 🐰",
+  });
+
+  const BunnyText = new GameObjectModel({
+    components: [textComponent],
+  });
+
+  const Bunny = new GameObjectModel({
+    components: [bunnySprite, movement],
+    position: new PIXI.Point(0, 0),
+    children: [BunnyText]
+  });
+
+  const buttonComponent = new ButtonComponentModel({
+    onClick: () => console.log("Click")
+  });
+
+  const hoverFeedback = new HoverFeedbackComponent();
+  const button = new GameObjectModel({
+    components: [buttonComponent, hoverFeedback],
+    position: new PIXI.Point(200, 200),
+  });
+
+  const scene = new SceneModel("DemoScene", [Bunny, button]);
 
   return (
-    <Sprite
-      image="https://s3-us-west-2.amazonaws.com/s.cdpn.io/693612/IaUrttj.png"
-      anchor={0.5}
-      scale={4}
-      rotation={rotation}
-    />
+    <div
+      style={{
+        width: '100vw',
+        height: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#100000',
+      }}
+    >
+      <Stage width={500} height={500} options={{ backgroundColor: 0x1099bb }}>
+        <SceneView scene={scene} />
+      </Stage>
+    </div>
   );
-};
-
-const PixiApp = () => {
-  return (
-    <Stage width={500} height={500}>
-      <Container position={[250, 250]}>
-        <RotatingBunny />
-      </Container>
-    </Stage>
-  );
-};
-
-export default PixiApp;
+}
