@@ -52,6 +52,8 @@ Prototype này tập trung vào việc thể hiện **board**, **reel**, **symbo
 - Pattern hướng đối tượng: `Game -> Board -> Reel -> Symbol` giúp mở rộng dễ dàng.
 
 ---
+## Demo
+- Link: https://pixi-js-rouge.vercel.app/
 
 ## 🚀 Cài đặt & Chạy
 
