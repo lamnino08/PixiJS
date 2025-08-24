@@ -7,9 +7,6 @@ export interface TextConstructorProps {
   text: string;
   style?: PIXI.TextStyle | Partial<PIXI.ITextStyle>;
 
-  backgroundColor?: number; // nền sau text
-
-  // Transform props
   x?: number;
   y?: number;
   rotation?: number;
@@ -26,7 +23,6 @@ export interface TextConstructorProps {
 export class TextComponentModel extends ComponentModel {
   text: string;
   style: PIXI.TextStyle;
-  backgroundColor?: number;
 
   x: number;
   y: number;
@@ -45,7 +41,6 @@ export class TextComponentModel extends ComponentModel {
     super();
     this.text = data.text;
 
-    // Cho phép truyền PIXI.TextStyle hoặc object option
     if (data.style instanceof PIXI.TextStyle) {
       this.style = data.style;
     } else {
@@ -59,8 +54,6 @@ export class TextComponentModel extends ComponentModel {
     }
 
     this.originalFill = this.style.fill;
-
-    this.backgroundColor = data.backgroundColor;
 
     this.x = data.x ?? 0;
     this.y = data.y ?? 0;
@@ -101,32 +94,11 @@ export class TextComponentModel extends ComponentModel {
             this.style.fill = this.originalFill;
           }
         }}
-        pointerdown={() => this.gameObject.onPointerDown.invoke()}
+        pointerdown={() => { this.gameObject.onPointerDown.invoke(); console.log("Text click");}}
         pointerup={() => this.gameObject.onPointerUp.invoke()}
         pointertap={() => this.gameObject.onPointerTap.invoke()}
       />
     );
-
-    if (this.backgroundColor) {
-      return (
-        <>
-          <Graphics
-            draw={(g) => {
-              g.clear();
-              g.beginFill(this.backgroundColor!);
-              g.drawRect(
-                this.x - this.gameObject.width / 2,
-                this.y - this.gameObject.height / 2,
-                this.gameObject.width,
-                this.gameObject.height
-              );
-              g.endFill();
-            }}
-          />
-          {textNode}
-        </>
-      );
-    }
 
     return textNode;
   }

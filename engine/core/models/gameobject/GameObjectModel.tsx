@@ -1,6 +1,6 @@
 import { ComponentModel } from "@/engine/core/models/gameobject/ComponentModel";
 import * as PIXI from "pixi.js";
-import { Event } from "@/lib/Emiter";
+import { Event } from "@/lib/Event";
 
 
 export interface GameObjectConstructorProps {
@@ -16,6 +16,7 @@ export interface GameObjectConstructorProps {
   interactive?: boolean;
   components?: ComponentModel[];
   childrens?: GameObjectModel[];
+  parent?: GameObjectModel;
 }
 
 export class GameObjectModel {
@@ -42,6 +43,8 @@ export class GameObjectModel {
   onPointerTap = new Event();
   //#endregion
 
+  onChildrenChanged = new Event<GameObjectModel[]>();
+
   constructor(data: GameObjectConstructorProps = {}) {
     this.position = data.position ? data.position.clone() : new PIXI.Point(0, 0);
     this.rotation = data.rotation ?? 0;
@@ -57,6 +60,7 @@ export class GameObjectModel {
     data.components?.forEach((c) => this.addComponentInConstructor(c));
     Object.values(this.components).forEach((c) => c.start?.());
     data.childrens?.forEach((child) => this.addChild(child));
+    data.parent && data.parent.addChild(this);
   }
 
   private addComponentInConstructor<T extends ComponentModel>(component: T): T {
@@ -101,6 +105,7 @@ export class GameObjectModel {
   addChild(child: GameObjectModel) {
     child.parent = this;
     this.children.push(child);
+    this.onChildrenChanged.invoke([...this.children]);
   }
 
   removeChild(child: GameObjectModel) {
@@ -109,6 +114,32 @@ export class GameObjectModel {
       child.destroy();
       this.children.splice(idx, 1);
     }
+    this.onChildrenChanged.invoke([...this.children]);
+  }
+  //#endregion
+
+  //#region PARENT_API
+  setParent(parent?: GameObjectModel) {
+    if (this.parent) {
+      this.parent.removeChild(this); // gỡ khỏi parent cũ
+    }
+
+    if (parent) {
+      parent.addChild(this);
+    }
+    this.parent = parent;
+  }
+
+  getParent(): GameObjectModel | undefined {
+    return this.parent;
+  }
+
+  getRoot(): GameObjectModel {
+    let root: GameObjectModel = this;
+    while (root.parent) {
+      root = root.parent;
+    }
+    return root;
   }
   //#endregion
 
