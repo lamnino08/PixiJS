@@ -9,7 +9,7 @@ export interface ButtonProps {
   text?: string;
   textStyle?: Partial<ITextStyle>;
   disabled?: boolean;
-
+  
   normalColor?: number;
   hoverColor?: number;
   pressedColor?: number;
@@ -47,7 +47,7 @@ export class ButtonComponentModel extends ComponentModel {
 
   start(): void {
     this.gameObject.interactive = true;
-    this.sprite = this.gameObject.getOrAddComponent(SpriteComponentModel, () => new SpriteComponentModel({radius: 10}));
+    this.sprite = this.gameObject.getOrAddComponent(SpriteComponentModel, () => new SpriteComponentModel({ radius: 10 }));
     this.textComponent = this.gameObject.getOrAddComponent(TextComponentModel, () => new TextComponentModel({ text: this.text, style: this.textStyle }));
 
     this.updateButtonState();
@@ -64,7 +64,6 @@ export class ButtonComponentModel extends ComponentModel {
   };
 
   onPointerDown = () => {
-    console.log(`onPointerDown ${this.disabled}`)
     if (this.disabled) return;
     this.sprite?.doColor(this.pressedColor, 100);
     this.onClick.invoke();
@@ -74,11 +73,6 @@ export class ButtonComponentModel extends ComponentModel {
     if (this.disabled) return;
     this.sprite?.doColor(this.hoverColor, 100);
   };
-
-  // onPointerTap = () => {
-  //   if (this.disabled) return;
-  //   this.onClick?.();
-  // };
 
   setDisabled(disabled: boolean) {
     this.disabled = disabled;

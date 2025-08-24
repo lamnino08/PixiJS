@@ -1,18 +1,27 @@
 // Sửa đổi file của bạn
 import { ComponentModel } from "@/engine/core/models/gameobject/ComponentModel";
 import { ReelComponent } from "./ReelComponent";
-import { BoardConfig } from "@/workspace/config/GameConfig";
+import { BoardConfig, Window } from "@/workspace/config/GameConfig";
 import { symbolPool, SymbolType } from "@/workspace/scripts/symbol/Symbol";
 import { Event } from "@/lib/Event";
 import { Server, SpinResponseData } from "@/server/Server";
+import { ButtonComponentModel } from "@/engine/core/component/ButtonComponent";
+import { HoverFeedbackComponent } from "../component/HoverFeedback";
+import { TextComponentModel } from "@/engine/core/models/gameobject/TextComponentModel";
 
 export class BoardManager extends ComponentModel {
     reels: ReelComponent[] = [];
 
+    startSpinButton: ButtonComponentModel;
+    scoreText: TextComponentModel;
+
     onDoneSpin = new Event();
+    onWinPoint = new Event<Number>();
 
     private stoppedReelCount = 0;
     private server: Server;
+    private _isSpinning = false;
+    private _score = 0;
 
     start(): void {
         this.reels.forEach(reel => {
@@ -22,10 +31,18 @@ export class BoardManager extends ComponentModel {
                 () => symbolPool[Math.floor(Math.random() * symbolPool.length)]
             );
             reel.spawnSymbols(symbols);
+            this.onDoneSpin.subscribe(reel.bounceSymbol);
         });
 
         this.server = new Server();
         this.server.response.subscribe(this.handleRespone);
+
+        this.startSpinButton.onClick.subscribe(this.startSpin);
+        this.onWinPoint.subscribe((sore: number) => {
+            this._score += sore;
+            this.scoreText.text = `Score: ${this._score}`
+        })
+        this.scoreText.text = `Score: ${this._score}`
     }
 
     private handleRespone = (data: SpinResponseData) => {
@@ -33,17 +50,36 @@ export class BoardManager extends ComponentModel {
             const symbolsForReel: SymbolType[] = [];
 
             for (let i = 0; i < BoardConfig.rowCount; i++) {
-                const matrixIndex = i * BoardConfig.reelCount + reelIndex;
+                const matrixIndex = reelIndex * BoardConfig.reelCount + i;
                 symbolsForReel.push(data.matrix[matrixIndex] as SymbolType);
             }
 
-            reel.setDatdSymbols(symbolsForReel);
-        });
+            let indexs: number[] = []
+            data.combines.forEach(combine => {
+                combine.positions.forEach(pos => {
+                    if (Math.floor(pos / BoardConfig.rowCount) === reelIndex) {
+                        indexs.push(pos % BoardConfig.rowCount);
+                    }
+                })
 
+            });
+            reel.setServerData(symbolsForReel, indexs);
+        });
+        data.combines.forEach(combine => {
+            this.onWinPoint.invoke(combine.score);
+        })
         this.stopSpin();
     }
 
     startSpin = () => {
+        if (this._isSpinning) return;
+
+        //button
+        this.startSpinButton.getComponent(HoverFeedbackComponent)?.enable(false);
+        this.startSpinButton.setDisabled(true);
+
+        //spin
+        this._isSpinning = true;
         this.reels.forEach((reel, index) => {
             setTimeout(() => {
                 reel.startSpin();
@@ -64,8 +100,11 @@ export class BoardManager extends ComponentModel {
     private handleReelStop = () => {
         this.stoppedReelCount++;
         if (this.stoppedReelCount === this.reels.length) {
-            this.onDoneSpin.invoke();
+            this.startSpinButton.getComponent(HoverFeedbackComponent)?.enable(true);
+            this.startSpinButton.setDisabled(false);
             this.stoppedReelCount = 0;
+            this._isSpinning = false;
+            this.onDoneSpin.invoke();
         }
     }
 }

@@ -12,22 +12,28 @@ export interface HoverFeedbackProps {
 export class HoverFeedbackComponent extends ComponentModel {
     props: Required<HoverFeedbackProps>;
 
+    private _isEbale: boolean = true;
+
     constructor(props?: HoverFeedbackProps) {
         super();
         this.props = {
             scaleNormal: props?.scaleNormal ?? 1,
-            scaleHover: props?.scaleHover ?? 1.02,
+            scaleHover: props?.scaleHover ?? 1.05,
             duration: props?.duration ?? 400,
             easing: props?.easing ?? Easing.easeOutCubic,
         };
+    }
 
-        this.onHoverEnter = () => {
-            this.gameObject.doScale(this.props.scaleHover, this.props.duration, undefined, this.props.easing);
-        };
+    onHoverEnter = () => {
+        this._isEbale && this.gameObject.doScale(this.props.scaleHover, this.props.duration, undefined, this.props.easing);
+    };
 
-        this.onHoverExit = () => {
-            this.gameObject.doScale(this.props.scaleNormal, this.props.duration, undefined, this.props.easing);
-        };
+    onHoverExit = () => {
+        this._isEbale && this.gameObject.doScale(this.props.scaleNormal, this.props.duration, undefined, this.props.easing);
+    };
+
+    enable = (isEnabled: boolean) => {
+        this.onHoverExit();
+        this._isEbale = isEnabled;
     }
 }
-

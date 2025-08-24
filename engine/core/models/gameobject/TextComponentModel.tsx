@@ -21,7 +21,7 @@ export interface TextConstructorProps {
 }
 
 export class TextComponentModel extends ComponentModel {
-  text: string;
+  _text: string;
   style: PIXI.TextStyle;
 
   x: number;
@@ -39,7 +39,7 @@ export class TextComponentModel extends ComponentModel {
 
   constructor(data: TextConstructorProps) {
     super();
-    this.text = data.text;
+    this._text = data.text;
 
     if (data.style instanceof PIXI.TextStyle) {
       this.style = data.style;
@@ -67,10 +67,17 @@ export class TextComponentModel extends ComponentModel {
     this.hoverColor = data.hoverColor;
   }
 
+  set text(value: string) {
+    if (this._text !== value) {
+      this._text = value;
+      this.onReRender.invoke();
+    }
+  }
+
   render(): ReactNode {
     const textNode = (
       <Text
-        text={this.text}
+        text={this._text}
         style={this.style}
         anchor={0.5}
         x={this.x}

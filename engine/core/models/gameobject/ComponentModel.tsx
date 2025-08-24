@@ -13,6 +13,10 @@ export abstract class ComponentModel {
 
   render?(): ReactNode; // use PixiJs to render React Component
 
+  getComponent<T extends ComponentModel>(ctor: new (...args: any[]) => T): T | undefined {
+    return this.gameObject.getComponent<T>(ctor);
+  }
+
   onHoverEnter?(): void;
   onHoverExit?(): void;
   onPointerDown?(): void;

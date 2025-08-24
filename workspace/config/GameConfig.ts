@@ -2,8 +2,9 @@ import { TextStyle } from "pixi.js";
 
 export const Window = {
     width: 650,
-    height: 720,
-    headerHeight: 60
+    height: 780,
+    headerHeight: 60,
+    scoreHeight: 60,
 }
 
 export const SymbolConfig = {

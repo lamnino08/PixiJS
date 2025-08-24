@@ -20,7 +20,7 @@ export const GameObject: React.FC<GameObjectProps> = ({ model }) => {
       setChildren([...newChildren]);
     });
     const sub1 = Object.values(model.components).map(c => c.onReRender.subscribe(() => {
-      console.log("rerender")
+      // console.log("rerender")
       forceUpdate();
     }));
     return () => { 

@@ -6,29 +6,41 @@ import { BoardManager } from "@/workspace/scripts/board/BoardManager";
 import { ReelComponent } from "@/workspace/scripts/board/ReelComponent";
 import { MaskComponentModel } from "@/engine/core/models/gameobject/MaskComponentModel";
 import { ButtonComponentModel } from "@/engine/core/component/ButtonComponent";
-import { HoverFeedbackComponent } from "@/workspace/main/HoverFeedback";
+import { HoverFeedbackComponent } from "@/workspace/scripts/component/HoverFeedback";
+import { TextComponentModel } from "@/engine/core/models/gameobject/TextComponentModel";
 
-export const buttonComponent = new ButtonComponentModel({
+const scoreText = new TextComponentModel({
+  text: "0",
+  style: textStyle
+})
+
+export const scoreGameObject = new GameObjectModel({
+  position: new Point(Window.width * 5/6, 90),
+  components: [
+    scoreText
+  ]
+})
+
+const boardManager = new BoardManager();
+const boardBorderWidth = 4;
+
+const buttonComponent = new ButtonComponentModel({
   text: "Spin",
   textStyle: textStyle
 })
+const hoverFeedback = new HoverFeedbackComponent();
 
 export const button = new GameObjectModel({
   width: 150,
   height: 55,
   position: new Point(Window.width / 2, Window.height - 50),
   components: [
-    new HoverFeedbackComponent({
-      scaleHover: 1.1
-    }),
+    hoverFeedback,
     buttonComponent
   ]
 })
-const boardBorderWidth = 4;
-
-const boardManager = new BoardManager();
-buttonComponent.onClick.subscribe(boardManager.startSpin)
-
+boardManager.startSpinButton = buttonComponent;
+boardManager.scoreText = scoreText;
 
 const reels = () => {
   const reelGameobjects: GameObjectModel[] = [];
@@ -54,7 +66,6 @@ const reels = () => {
 
     reelGameobjects.push(reelGameobject);
     boardManager.reels.push(reelComponent);
-
   }
   return reelGameobjects;
 }
@@ -66,7 +77,7 @@ export const Board = new GameObjectModel({
   height: SymbolConfig.height * BoardConfig.rowCount,
   position: new Point(
     Window.width / 2,
-    Window.headerHeight + (SymbolConfig.height * BoardConfig.rowCount) / 2
+    Window.headerHeight + Window.scoreHeight + (SymbolConfig.height * BoardConfig.rowCount) / 2
   ),
   components: [boardManager, mask],
   childrens: reels()

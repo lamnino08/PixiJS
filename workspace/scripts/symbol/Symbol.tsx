@@ -1,6 +1,7 @@
 import { ComponentModel } from "@/engine/core/models/gameobject/ComponentModel";
 import { GameObjectModel } from "@/engine/core/models/gameobject/GameObjectModel";
 import { SpriteComponentModel } from "@/engine/core/models/gameobject/SpriteComponentModel";
+import { Easing } from "@/lib/tween/Easing";
 import { SymbolConfig } from "@/workspace/config/GameConfig";
 
 export type SymbolType = '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'K';
@@ -53,5 +54,11 @@ export class Symbol extends ComponentModel {
 
     toUnBlur(): void {
         this.sprite.texture = getSymbolTextureUrl(this._symbolType);
+    }
+
+    scaleUpThenShrink(duration: number = 500): void {
+        this.gameObject.doScale(1.2, (2 / 5) * duration, () => {
+            this.gameObject.doScale(0, (3 / 5) * duration, undefined, Easing.easeInQuad);
+        }, Easing.easeOutQuad);
     }
 }
