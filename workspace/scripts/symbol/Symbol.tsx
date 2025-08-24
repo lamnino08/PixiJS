@@ -42,11 +42,16 @@ export class Symbol extends ComponentModel {
         this.sprite.texture = getSymbolTextureUrl(this._symbolType);
     }
 
+    setNewSybolType = (symbol: SymbolType) => {
+        this._symbolType = symbol;
+        this.sprite.texture = getSymbolBlurTextureUrl(symbol);
+    }
+
     toBlur(): void {
         this.sprite.texture = getSymbolBlurTextureUrl(this._symbolType);
     }
 
     toUnBlur(): void {
-        this.sprite = this.gameObject.getOrAddComponent(SpriteComponentModel)
+        this.sprite.texture = getSymbolTextureUrl(this._symbolType);
     }
 }

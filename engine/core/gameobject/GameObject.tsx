@@ -11,6 +11,7 @@ interface GameObjectProps {
 export const GameObject: React.FC<GameObjectProps> = ({ model }) => {
   const containerRef = React.useRef<PIXI.Container>(null);
   const [children, setChildren] = React.useState<GameObjectModel[]>(model.children);
+  const [_, forceUpdate] = React.useReducer((x) => x + 1, 0);
 
   const maskComponent = model.getComponent(MaskComponentModel);
 
@@ -20,9 +21,7 @@ export const GameObject: React.FC<GameObjectProps> = ({ model }) => {
     });
     const sub1 = Object.values(model.components).map(c => c.onReRender.subscribe(() => {
       console.log("rerender")
-      if (containerRef.current) {
-        applyModelToContainer(containerRef.current, model);
-      }
+      forceUpdate();
     }));
     return () => { 
       sub.unsubscribe();

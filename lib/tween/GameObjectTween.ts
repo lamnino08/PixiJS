@@ -4,7 +4,12 @@ import { Easing } from "@/lib/tween/Easing";
 
 declare module "@/engine/core/models/gameobject/GameObjectModel" {
   interface GameObjectModel {
-    doScale(to: number, duration: number, onComplete?: () => void): Tween;
+    doScale(
+      to: number,
+      duration: number,
+      onComplete?: () => void,
+      easing?: (t: number) => number
+    ): Tween;
     doMoveY(
       to: number,
       duration: number,
@@ -18,14 +23,15 @@ GameObjectModel.prototype.doScale = function (
   this: GameObjectModel,
   to: number,
   duration: number,
-  onComplete?: () => void
+  onComplete?: () => void,
+  easing: (t: number) => number = Easing.easeOutBounce
 ) {
   const from = this.scale;
 
   return new Tween(from, to, duration, (val) => {
     this.scale = val;
   })
-    .setEasing(Easing.easeOutBounce)
+    .setEasing(easing)
     .onDone(() => onComplete?.())
     .start();
 };
