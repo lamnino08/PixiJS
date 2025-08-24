@@ -1,34 +1,34 @@
 import { GameObjectModel } from "@/engine/core/models/gameobject/GameObjectModel";
 import { SpriteComponentModel } from "@/engine/core/models/gameobject/SpriteComponentModel";
-import { BoardConfig, SymbolConfig, Window } from "@/workspace/config/GameConfig";
-import { Point } from "pixi.js";
+import { BoardConfig, SymbolConfig, Window, textStyle } from "@/workspace/config/GameConfig";
+import { Point, TextStyle } from "pixi.js";
 import { BoardManager } from "@/workspace/scripts/board/BoardManager";
 import { ReelComponent } from "@/workspace/scripts/board/ReelComponent";
 import { MaskComponentModel } from "@/engine/core/models/gameobject/MaskComponentModel";
 import { ButtonComponentModel } from "@/engine/core/component/ButtonComponent";
 import { HoverFeedbackComponent } from "@/workspace/main/HoverFeedback";
 
-export const buttonComponent = new ButtonComponentModel()
+export const buttonComponent = new ButtonComponentModel({
+  text: "Spin",
+  textStyle: textStyle
+})
+
 export const button = new GameObjectModel({
   width: 150,
   height: 55,
   position: new Point(Window.width / 2, Window.height - 50),
   components: [
-      new HoverFeedbackComponent(),
-      buttonComponent
+    new HoverFeedbackComponent({
+      scaleHover: 1.1
+    }),
+    buttonComponent
   ]
 })
 const boardBorderWidth = 4;
 
-const boardSprite = new SpriteComponentModel({
-  color: 0xff0000,
-  radius: 8,
-  borderColor: 0x00ff00,
-  borderWidth: boardBorderWidth,
-});
-
 const boardManager = new BoardManager();
 buttonComponent.onClick.subscribe(boardManager.startSpin)
+
 
 const reels = () => {
   const reelGameobjects: GameObjectModel[] = [];
@@ -43,7 +43,7 @@ const reels = () => {
     const reelComponent = new ReelComponent();
 
     const reelGameobject = new GameObjectModel({
-      width: SymbolConfig.width+4,
+      width: SymbolConfig.width + 4,
       height: SymbolConfig.height * BoardConfig.rowCount + boardBorderWidth,
       position: new Point(
         -((SymbolConfig.width * BoardConfig.reelCount) / 2) + i * SymbolConfig.width + SymbolConfig.width / 2,
@@ -68,6 +68,6 @@ export const Board = new GameObjectModel({
     Window.width / 2,
     Window.headerHeight + (SymbolConfig.height * BoardConfig.rowCount) / 2
   ),
-  components: [boardSprite, boardManager, mask],
+  components: [boardManager, mask],
   childrens: reels()
 });

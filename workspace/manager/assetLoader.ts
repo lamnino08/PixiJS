@@ -3,6 +3,7 @@ import { AssetManager } from "@/engine/core/loader/AssetLoader";
 export const loadAssets = async () => {
     await AssetManager.loadAssets({
         logo: "assets/sprites/logo.png",
+        button: "assets/sprites/button.png",
 
         symbol_0: "assets/sprites/symbol_0.png",
         symbol_0_blur: "assets/sprites/symbol_0_blur.png",

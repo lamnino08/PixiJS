@@ -62,7 +62,7 @@ export class TextComponentModel extends ComponentModel {
     this.scaleY = data.scaleY ?? 1;
     this.alpha = data.alpha ?? 1;
 
-    this.interactive = data.interactive ?? false;
+    this.interactive = data.interactive ?? true;
     this.buttonMode = data.buttonMode ?? false;
     this.hoverColor = data.hoverColor;
   }
@@ -77,8 +77,8 @@ export class TextComponentModel extends ComponentModel {
         y={this.y}
         rotation={this.rotation}
         scale={{
-          x: this.scaleX * this.gameObject.scale,
-          y: this.scaleY * this.gameObject.scale,
+          x: this.scaleX,
+          y: this.scaleY,
         }}
         alpha={this.alpha}
         interactive={this.interactive}
@@ -94,7 +94,7 @@ export class TextComponentModel extends ComponentModel {
             this.style.fill = this.originalFill;
           }
         }}
-        pointerdown={() => { this.gameObject.onPointerDown.invoke(); console.log("Text click");}}
+        pointerdown={() => this.gameObject.onPointerDown.invoke()}
         pointerup={() => this.gameObject.onPointerUp.invoke()}
         pointertap={() => this.gameObject.onPointerTap.invoke()}
       />

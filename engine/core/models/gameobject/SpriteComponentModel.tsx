@@ -26,7 +26,6 @@ export interface SpriteConstructorProps {
 
     buttonMode?: boolean;
     hoverColor?: number;
-
 }
 
 export class SpriteComponentModel extends ComponentModel {
@@ -95,9 +94,10 @@ export class SpriteComponentModel extends ComponentModel {
             alpha: this.alpha,
             rotation: this.rotation,
             scale: { x: this.scaleX, y: this.scaleY },
-            x: this.x - this.gameObject.width / 2,
-            y: this.y - this.gameObject.height / 2,
-
+            x: - this.gameObject.width/2,
+            y: - this.gameObject.height/2,
+            width: this.gameObject.width,
+            height: this.gameObject.height,
             pointerover: () => {
                 this.gameObject.onHoverEnter.invoke();
                 if (this.hoverColor) this.color = this.hoverColor;
@@ -113,8 +113,6 @@ export class SpriteComponentModel extends ComponentModel {
             return (
                 <Sprite
                     image={this._texture}
-                    width={this.gameObject.width}
-                    height={this.gameObject.height}
                     anchor={this.anchor}
                     tint={this.color}
                     {...commonProps}

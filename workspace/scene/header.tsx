@@ -1,8 +1,8 @@
 import { GameObjectModel } from "@/engine/core/models/gameobject/GameObjectModel"
 import { SpriteComponentModel } from "@/engine/core/models/gameobject/SpriteComponentModel"
 import { TextComponentModel } from "@/engine/core/models/gameobject/TextComponentModel"
-import { Point, TextStyle } from "pixi.js"
-import { Window } from "@/workspace/config/GameConfig"
+import { Point } from "pixi.js"
+import { textStyle, Window } from "@/workspace/config/GameConfig"
 
 const logo = new GameObjectModel({
     width: 40,
@@ -14,19 +14,7 @@ const logo = new GameObjectModel({
         })
     ]
 })
-const style = new TextStyle({
-    fontFamily: "Arial",
-    fontSize: 24,
-    fontWeight: "bold",
-    fill: ["#ffffff", "#ffcc00"], // gradient từ trắng sang vàng
-    stroke: "#000000",
-    strokeThickness: 3,
-    dropShadow: true,
-    dropShadowColor: "#000000",
-    dropShadowBlur: 4,
-    dropShadowAngle: Math.PI / 6,
-    dropShadowDistance: 3,
-  });
+
   
   const gameTitle = new GameObjectModel({
     width: 240,
@@ -35,7 +23,7 @@ const style = new TextStyle({
     components: [
       new TextComponentModel({
         text: "Slot Candy Match 4",
-        style
+        style: textStyle
       })
     ]
   });

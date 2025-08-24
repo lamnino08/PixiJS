@@ -1,4 +1,4 @@
-import { Assets, Texture } from "pixi.js";
+import { Assets, SCALE_MODES, Texture } from "pixi.js";
 
 export class AssetManager {
   private static textures: Map<string, Texture> = new Map();
@@ -9,6 +9,7 @@ export class AssetManager {
     const keys = Object.keys(assets);
     for (const key of keys) {
       const tex = await Assets.load<Texture>(assets[key]);
+      tex.baseTexture.scaleMode = SCALE_MODES.NEAREST;
       this.textures.set(key, tex);
     }
   }

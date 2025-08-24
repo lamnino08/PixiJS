@@ -1,14 +1,15 @@
 import { ComponentModel } from "@/engine/core/models/gameobject/ComponentModel";
-import { SymbolConfig } from "@/workspace/config/GameConfig";
+import { BoardConfig, SymbolConfig } from "@/workspace/config/GameConfig";
 import { SymbolType, symbol } from "@/workspace/scripts/symbol/Symbol";
 import { Point } from "pixi.js";
 import { Symbol } from "@/workspace/scripts/symbol/Symbol";
 import "@/lib/tween/GameObjectTween";
 import { Easing } from "@/lib/tween/Easing";
+import { Event } from "@/lib/Event";
+
 
 export class ReelComponent extends ComponentModel {
     private symbols: Symbol[] = [];
-    private originalSymbolCount: number = 0;
     private spinning = false;
     private isStopping = false;
     private speed = 0;
@@ -16,8 +17,9 @@ export class ReelComponent extends ComponentModel {
     private readonly ACCELERATION = 0.03;
     private DECELERATION = 0.003;
 
+    public onStopComplete = new Event();
+
     spawnSymbols(symbols: SymbolType[]) {
-        this.originalSymbolCount = symbols.length;
         const reelSymbols = [...symbols, ...symbols];
         this.symbols = reelSymbols.map((sym, i) => {
             const symObj = symbol(sym);
@@ -32,6 +34,18 @@ export class ReelComponent extends ComponentModel {
         });
     }
 
+    setDatdSymbols(symbols: SymbolType[]) {
+        console.log(symbols);
+        for (let i = 0; i < BoardConfig.rowCount; i++) {
+            this.symbols[i].setNewSybolType(symbols[i]);
+        }
+
+        for (let i = 0; i < BoardConfig.rowCount; i++) {
+            this.symbols[i + BoardConfig.rowCount].setNewSybolType(symbols[i]);
+        }
+    }
+    
+
     startSpin() {
         this.spinning = true;
         this.isStopping = false;
@@ -42,15 +56,24 @@ export class ReelComponent extends ComponentModel {
         });
     }
 
-    stopSpin() {
-        const v0 = this.MAX_SPEED;
-        const N = 5;
-        const S = N * this.originalSymbolCount * SymbolConfig.height;
-        this.DECELERATION = v0 * v0 / (2 * S);
-    
+   stopSpin() {
+        const finalY = (0 - 1.5) * SymbolConfig.height; 
+        const currentY = this.symbols[0].gameObject.position.y;
+        
+        const reelHeight = this.symbols.length * SymbolConfig.height;
+
+        let distanceToStop = (finalY - currentY) % reelHeight;
+        if (distanceToStop < 0) {
+            distanceToStop += reelHeight;
+        }
+
+        const extraLaps = 2;
+        distanceToStop += extraLaps * reelHeight;
+        this.DECELERATION = (this.speed * this.speed) / (2 * distanceToStop);
+        
         this.isStopping = true;
         this.symbols.forEach((s) => {
-            s.toUnBlur(); 
+            s.toUnBlur();
         });
     }
 
@@ -62,6 +85,7 @@ export class ReelComponent extends ComponentModel {
                 this.isStopping = false;
                 this.spinning = false;
                 this.alignSymbols();
+        this.onStopComplete.invoke();
                 return;
             }
         } else if (this.spinning) {
@@ -89,11 +113,12 @@ export class ReelComponent extends ComponentModel {
             const numLaps = Math.round(currentY / reelHeight);
             const targetY = numLaps * reelHeight + finalY;
 
-            if (i < this.originalSymbolCount + 1) {
+            if (i < BoardConfig.rowCount + 1) {
                 s.gameObject.doMoveY?.(targetY, 800, undefined, Easing.easeOutCubic);
             } else {
                 s.gameObject.position.y = targetY;
             }
+            s.toUnBlur();
         });
     }
 }
