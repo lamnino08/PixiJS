@@ -128,7 +128,6 @@ export class ReelComponent extends ComponentModel {
         }, 500);
     }
 
-    // Sửa đổi phương thức chính để gọi các hàm nhỏ hơn
     private fallSymbols() {
         if (this._combineIndexs.length === 0) return;
 
@@ -139,7 +138,6 @@ export class ReelComponent extends ComponentModel {
         this.symbols = reorderedSymbols;
     }
 
-    // Hàm mới để lấy danh sách các symbol cần rơi
     private getSymbolsToFall(): Symbol[] {
         const maxIndex = Math.max(...this._combineIndexs);
         return this.symbols.filter((s, i) => {
@@ -187,7 +185,7 @@ export class ReelComponent extends ComponentModel {
             const numLaps = Math.round(currentY / reelHeight);
             const targetY = numLaps * reelHeight + finalY;
 
-            if (i < BoardConfig.rowCount + 1) {
+            if (i < BoardConfig.rowCount) {
                 s.gameObject.doMoveY?.(targetY, 800, undefined, Easing.easeOutCubic);
             } else {
                 s.gameObject.position.y = targetY;
