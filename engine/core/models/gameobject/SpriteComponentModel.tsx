@@ -26,10 +26,11 @@ export interface SpriteConstructorProps {
 
     buttonMode?: boolean;
     hoverColor?: number;
+
 }
 
 export class SpriteComponentModel extends ComponentModel {
-    texture?: string;
+    private _texture?: string;
     anchor: number | [number, number];
     color: number;
     radius: number;
@@ -55,7 +56,7 @@ export class SpriteComponentModel extends ComponentModel {
 
     constructor(data: SpriteConstructorProps = {}) {
         super();
-        this.texture = data.texture;
+        this._texture = data.texture;
         this.anchor = data.anchor ?? 0.5;
         this.color = data.color ?? 0xffffff;
         this.radius = data.radius ?? 0;
@@ -80,6 +81,13 @@ export class SpriteComponentModel extends ComponentModel {
         this.hoverColor = data.hoverColor;
     }
 
+    set texture(value: string | undefined) {
+        if (this._texture !== value) {
+            this._texture = value;
+            this.onReRender.invoke();
+        }
+    }
+
     render(): ReactNode {
         const commonProps = {
             interactive: true,
@@ -101,10 +109,10 @@ export class SpriteComponentModel extends ComponentModel {
             pointertap: () => this.gameObject.onPointerTap.invoke(),
         };
 
-        if (this.texture) {
+        if (this._texture) {
             return (
                 <Sprite
-                    image={this.texture}
+                    image={this._texture}
                     width={this.gameObject.width}
                     height={this.gameObject.height}
                     anchor={this.anchor}

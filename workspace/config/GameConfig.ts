@@ -1,6 +1,6 @@
 export const Window = {
     width: 650,
-    height: 750,
+    height: 720,
     headerHeight: 60
 }
 
