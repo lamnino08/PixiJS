@@ -18,7 +18,7 @@ export default function PixiApp() {
     load();
   }, []);
 
-  
+
 
   if (!loaded) {
     return <div style={{ color: "white" }}>Loading assets...</div>;
@@ -35,7 +35,7 @@ export default function PixiApp() {
         backgroundColor: "#100000",
       }}
     >
-      <Stage width={Window.width} height={Window.height} options={{ backgroundColor: "#100030" }}>
+      <Stage width={Window.width} height={Window.height} options={{ backgroundColor: 0x100030 }}>
         <SceneView scene={scene} />
       </Stage>
     </div>
